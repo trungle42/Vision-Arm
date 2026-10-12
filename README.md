@@ -18,7 +18,7 @@ Milestone 1 in progress: object classifier with PyTorch on a live webcam feed.
 
 | Milestone | Result |
 |---|---|
-| 1. Classifier | 10/10 on a 10-photo held-out test set (54 photos, 2 objects, one desk, so a small and easy test). CPU vs GPU timing: not yet measured |
+| 1. Classifier | 10/10 on a 10-photo held-out test set (54 photos, 2 objects, one desk, so a small and easy test). Inference time per photo (batch size 1, model only, 3 runs): GPU (Tesla T4) 4.4 to 4.6 ms, CPU (2-core Xeon on Colab) 57 to 77 ms, about 13x to 17x faster |
 
 ## Layout
 
