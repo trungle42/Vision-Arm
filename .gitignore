@@ -10,3 +10,6 @@ data/raw/*
 *.dylib
 *.so
 src/servo/test_servo
+firmware/build/
+firmware/sdkconfig
+firmware/sdkconfig.old
