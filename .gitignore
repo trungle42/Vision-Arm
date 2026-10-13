@@ -7,3 +7,6 @@ data/raw/*
 !data/raw/.gitkeep
 *.pt
 *.pth
+*.dylib
+*.so
+src/servo/test_servo

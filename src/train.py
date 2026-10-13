@@ -3,16 +3,30 @@ import json
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from torch.utils.data import DataLoader, random_split
+from torch.utils.data import DataLoader, Subset
 from torchvision import datasets, models, transforms
 
-tfm = transforms.Compose([transforms.Resize((224, 224)), transforms.ToTensor()])
-data = datasets.ImageFolder("data/raw", transform=tfm)  # labels come from the folder names
+resize = [transforms.Resize((224, 224))]
+test_tfm = transforms.Compose(resize + [transforms.ToTensor()])
+# training photos get random changes each epoch so the model can't just memorize them
+train_tfm = transforms.Compose(resize + [
+    transforms.RandomHorizontalFlip(),
+    transforms.RandomRotation(15),
+    transforms.ColorJitter(brightness=0.4, contrast=0.3, saturation=0.3),
+    transforms.ToTensor(),
+])
+# two views of the same folder: same photos, different transforms
+train_data = datasets.ImageFolder("data/raw", transform=train_tfm)
+test_data = datasets.ImageFolder("data/raw", transform=test_tfm)
+data = test_data
 print(data.classes, len(data))
 
+# split by index so a photo is never in both sets
 n_test = int(0.2 * len(data))
 g = torch.Generator().manual_seed(42)
-train_set, test_set = random_split(data, [len(data) - n_test, n_test], generator=g)
+perm = torch.randperm(len(data), generator=g).tolist()
+train_set = Subset(train_data, perm[n_test:])
+test_set = Subset(test_data, perm[:n_test])
 train_loader = DataLoader(train_set, batch_size=8, shuffle=True)
 test_loader = DataLoader(test_set, batch_size=8, shuffle=False)
 
@@ -24,7 +38,7 @@ model = model.to(device)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=1e-4)
 
-for epoch in range(5):
+for epoch in range(10):
     model.train()
     total_loss, correct = 0.0, 0
     for xb, yb in train_loader:
