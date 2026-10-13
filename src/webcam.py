@@ -19,6 +19,9 @@ tf = transforms.Compose([transforms.Resize((224, 224)), transforms.ToTensor()])
 cap = cv2.VideoCapture(0)
 if not cap.isOpened():
     raise SystemExit("could not open webcam")
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)   # same size for training photos and the demo
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+print("camera size:", int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)), "x", int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)))
 
 H = pipeline.load_calibration()
 background = None  # press b with an empty scene to set it

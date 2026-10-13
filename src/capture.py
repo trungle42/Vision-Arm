@@ -11,6 +11,9 @@ out.mkdir(parents=True, exist_ok=True)
 cap = cv2.VideoCapture(0)
 if not cap.isOpened():
     raise SystemExit("could not open webcam")
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)   # same size for training photos and the demo
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+print("camera size:", int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)), "x", int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)))
 
 count = len(list(out.glob("*.jpg")))
 print(f"saving to {out}, {count} photos so far. space = save, q = quit")
